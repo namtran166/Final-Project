@@ -1,0 +1,499 @@
+Final Project for Got It Onboarding Course
+
+# API Docs
+
+## POST /users
+This endpoint is used to register a new user.
+```
+Header:
+    Content-Type: application/json
+Body:
+{
+    "username": <string:username>,        #required
+    "password": <string:password>,        #required
+    "first_name": <string:first_name>,    #optional
+    "last_name": <string:last_name>       #optional
+}
+```
+#### Successful Request
+```
+Status code = 201 Created.
+{
+    "description": "User created successfully."
+    "status_code": 201
+}
+```
+#### Unsuccessful Request
+Username already exists in our database.
+```
+Status code = 400 Bad Request
+{
+    "description": "A user with that username already exists."
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+The required username is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Username is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+The required password is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Password is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+Unexpected Internal Server Error.
+```
+Status code: 500 Internal Server Error
+{
+    "description": "An unexpected Internal Server Error occurred when creating this user.",
+    "error": "Internal Server Error",
+    "status_code": 500
+}
+```
+## POST /auth
+This endpoint is used to provide access token for registered users.
+```
+Header:
+    Content-Type: application/json
+
+Body:
+{
+    "username": <string:username>,      #required
+    "password": <string:password>       #required
+}
+```
+#### Successful request
+```
+Status code: 200 OK
+{
+    "access_token": <string:access_token>
+}
+```
+#### Unsuccessful request
+```
+The required username is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Username is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+The required password is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Password is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+The client enters an unregistered user, or an registered user with incorrect password.
+```
+Status code: 401 Unauthorized
+{
+    "description": "Invalid credentials",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Unexpected Internal Server Error.
+```
+Status code: 500 Internal Server Error
+{
+    "description": "An unexpected Internal Server Error occurred when logging in with this user.",
+    "error": "Internal Server Error",
+    "status_code": 500
+}
+```
+
+## GET /categories
+This endpoint is used to retrieve all categories in our current database.
+```
+No request body needed.
+```
+#### Successful request
+```
+Status_code: 200 OK
+[
+    {
+        "id": <int:id>,
+        "name": <string:name>,
+        "description": <string:description>,
+        "date_created": <DateTime:date_created>,
+        "date_modified": <DateTime:date_modified>,
+        "items": [
+            item1_info,
+            item2_info,
+            ...
+        ]
+    },
+    {
+        category2_info
+    }
+    ...
+]
+```
+#### Unsuccessful request
+Unexpected Internal Server Error.
+```
+Status code: 500 Internal Server Error
+{
+    "description": "An unexpected Internal Server Error occurred when getting all the categories.",
+    "error": "Internal Server Error",
+    "status_code": 500
+}
+```
+
+## GET /categories/<int:category_id>
+This endpoint is used to retrieve a specific category in our current database.
+```
+No request body needed.
+```
+#### Successful request
+```
+Status_code: 200 OK
+{
+    "id": <int:id>,
+    "name": <string:name>,
+    "description": <string:description>,
+    "date_created": <DateTime:date_created>,
+    "date_modified": <DateTime:date_modified>,
+    "items": [
+        item1_info,
+        item2_info,
+        ...
+    ]
+}
+```
+#### Unsuccessful request
+This category does not exist in our database.
+Status code: 404 Not Found
+{
+    "description": "Category not found.",
+    "error": "Not Found",
+    "status_code": 404
+}
+```
+Unexpected Internal Server Error.
+```
+Status code: 500 Internal Server Error
+{
+    "description": "An unexpected Internal Server Error occurred when getting this category.",
+    "error": "Internal Server Error",
+    "status_code": 500
+}
+```
+
+## POST /categories/<int:category_id>
+Create a new category in our database.
+```
+Header:
+    Content-Type: application/json
+    Authorization Required: JWT <string:access_token>
+
+Body:
+{
+    "name": <string:name>,                  #required
+    "description": <string:description>     #optional
+}
+```
+#### Successful request
+```
+Status_code: 201 Created
+{
+    "id": <int:id>,
+    "name": <string:name>,
+    "description": <string:description>,
+    "date_created": <DateTime:date_created>,
+    "date_modified": <DateTime:date_modified>,
+    "items": []
+}
+```
+#### Unsuccessful request
+The required category name is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Category name is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
+The required authorization is missing.
+```
+Status code: 401 Unauthorized
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+The access token is expired.
+```
+Status code: 401 Unauthorized
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Unexpected Internal Server Error.
+```
+Status code: 500 Internal Server Error
+{
+    "description": "An unexpected Internal Server Error occurred when creating this category.",
+    "error": "Internal Server Error",
+    "status_code": 500
+}
+```
+
+## GET /stores/<int:store_id>/item_list
+What is a store without our favorite items? With this endpoint we can easily access to all items we currently have in our store! Just a quick reminder, don't forget to put some items in the store first!
+```
+No request body needed.
+```
+#### Successful request
+Whatever the request is, there is always a 200 OK response with our items (none or many):
+```
+[
+    {
+        "item_id": <int:item_id>,
+        "name": <string:name>,
+        "price": <float:price>,
+        "store_id": <int:store_id>
+    },
+    ...
+]
+```
+
+## GET /stores/<int:store_id>/items/<int:item_id>
+With this endpoint we can easily access to a particular item we currently have in our store! Just a quick reminder, don't forget to put the item_id!
+```
+No request body needed.
+```
+#### Successful request
+In case you find your item, congratulations! There is always a 200 OK response with your item as well:
+```
+{
+    "item_id": <int:item_id>,
+    "name": <string:name>,
+    "price": <float:price>,
+    "store_id": <int:store_id>
+}
+```
+#### Unsuccessful request
+Too bad we cannot find your store! We return a 404 Not Found response to notify you that:
+```
+{
+    "message": "Store not found."
+}
+```
+Too bad we cannot find your item! We return a 404 Not Found response to notify you that:
+```
+{
+    "message": "Item not found."
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to get this item."
+}
+```
+
+## POST /stores/<int:store_id>/items
+With this endpoint we can easily upload our favorite item we currently have to our store! Just a quick reminder, don't forget to put the store_id!
+```
+Header:
+    Content-Type: application/json
+    Authorization Required
+
+Body:
+{
+    "name": <string:name>,              #required
+    "price": <float:price>,             #required
+}
+```
+#### Successful request
+In case we can upload your item, congratulations! We return a 201 Created response with your item as well:
+```
+{
+    "item_id": <int:item_id>,
+    "name": <string:name>,
+    "price": <float:price>,
+    "store_id": <int:store_id>
+}
+```
+#### Unsuccessful request
+Too bad we cannot find the store you want to upload to! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "Store not found."
+}
+```
+In case you forgot to put an item name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This item needs a name."
+}
+```
+The same thing happens when you forget to put a price, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This item needs a price."
+}
+```
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just upload some random items! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to post this item."
+}
+```
+
+## DELETE /stores/<int:store_id>/items/<int:item_id>
+With this endpoint we can easily remove our unwanted item we currently have in our store! Just a quick reminder, don't forget to put the item_id!
+```
+Header:
+    Authorization Required
+```
+#### Successful request
+In case we can remove the item you hated, congratulations! We return a 200 OK response with this message:
+```
+{
+    "message": "Item deleted."
+}
+```
+#### Unsuccessful request
+Too bad we cannot find the store you want to delete the item from! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "Store not found."
+}
+```
+Too bad we cannot find the item you want to delete! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "Item not found."
+}
+```
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just delete some random items! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to delete this item."
+}
+```
+
+## PUT /stores/<int:store_id>/items/<int:item_id>
+Did you put wrong information about your favorite item into the database? Well, you can simply use this PUT method, it will update an existing one based on the store_id you provided.
+```
+Header:
+    Content-Type: application/json
+    Authorization Required
+
+Body:
+{
+    "name": <string:name>,          #required
+    "price": <float:price>   ,      #required
+}
+```
+#### Successful request
+Yay we found your item in our database! We return a 200 OK response with the updated item:
+```
+{
+    "item_id": <int:item_id>,
+    "name": <string:name>,
+    "price": <float:price>,
+    "store_id": <int:store_id>
+}
+```
+#### Unsuccessful request
+In case you forgot to put an item name, a 400 Bad Request response will be sent back alongside with this message:
+```
+{
+    "message": "This item needs a name."
+}
+```
+The same thing happens when you forget to put a price, a 400 Bad Request response will be returned with this message:
+```
+{
+    "message": "This item needs a price."
+}
+```
+Too bad we cannot find the store you want to update the item! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "Store not found."
+}
+```
+Too bad we cannot find the item you want to update! A 404 Not Found response will be return with this message:
+```
+{
+    "message": "Item not found."
+}
+```
+Did you forget to authorize yourself? You bet. Since our items are precious, we cannot allow anyone to go and just update some random items! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Request does not contain an access token",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+Did you log in a long time ago? You should log in again since our protected system invalidates unused access token after some time! A 401 Unauthorized reminder for you!
+```
+{
+    "description": "Signature has expired",
+    "error": "Authorization Required",
+    "status_code": 401
+}
+```
+When there is some unexpected error within our internal server, a 500 Internal Server Error response will be returned, and you should upload the bug for us to fix!
+```
+{
+    "message": "An error occurred when trying to put this item."
+}
+```
