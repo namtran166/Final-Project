@@ -17,9 +17,9 @@ Body:
 ```
 ### Successful Request
 ```
-Status code = 201 Created.
+Status code = 201 Created
 {
-    "description": "User created successfully."
+    "description": "User created successfully.",
     "status_code": 201
 }
 ```
@@ -28,7 +28,7 @@ Username already exists in our database.
 ```
 Status code = 400 Bad Request
 {
-    "description": "Username already exists."
+    "description": "Username already exists.",
     "error": "Bad Request",
     "status_code": 400
 }
@@ -478,7 +478,7 @@ Status code: 404 Not Found
     "status_code": 404
 }
 ```
-This category does not exist.
+This item does not exist.
 ```
 Status code: 404 Not Found
 {
