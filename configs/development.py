@@ -1,5 +1,6 @@
 from configs.base import Config
 
 
-class DevConfig(Config):
+class DevelopmentConfig(Config):
+    secret_key = "development"
     pass
