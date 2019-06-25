@@ -17,7 +17,7 @@ Body:
 ```
 ### Successful Request
 ```
-Status code = 201 Created
+Status code: 201 Created
 {
     "description": "User created successfully.",
     "status_code": 201
@@ -26,7 +26,7 @@ Status code = 201 Created
 ### Unsuccessful Request
 Username already exists in our database.
 ```
-Status code = 400 Bad Request
+Status code: 400 Bad Request
 {
     "description": "Username already exists.",
     "error": "Bad Request",
@@ -364,7 +364,7 @@ Header:
 
 Body:
 {
-    "name": <string:name>,                  #optional
+    "name": <string:name>,                  #required
     "description": <string:description>     #optional
 }
 ```
@@ -380,6 +380,15 @@ Status code: 201 Created
 }
 ```
 ### Unsuccessful request
+The required item name is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Item name is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
 The required authorization is missing.
 ```
 Status code: 401 Unauthorized
@@ -506,7 +515,7 @@ Header:
 
 Body:
 {
-    "name": <string:name>                   #optional
+    "name": <string:name>                   #required
     "description": <string:description>     #optional
 }
 ```
@@ -523,6 +532,15 @@ Status code: 200 OK
 }
 ```
 ### Unsuccessful request
+The required item name is missing.
+```
+Status code: 400 Bad Request
+{
+    "description": "Item name is required.",
+    "error": "Bad Request",
+    "status_code": 400
+}
+```
 The required authorization is missing.
 ```
 Status code: 401 Unauthorized
