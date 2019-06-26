@@ -1,5 +1,9 @@
-from marshmallow import Schema
+from marshmallow import Schema, fields
 
 
 class BaseSchema(Schema):
-    pass
+    id = fields.Integer(dump_only=True)
+
+    date_created = fields.DateTime(dump_only=True)
+
+    date_modified = fields.DateTime(dump_only=True)
