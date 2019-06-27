@@ -1,9 +1,35 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, pre_load
+
+from main.utils.exception import BadRequestError
 
 
 class BaseSchema(Schema):
-    id = fields.Integer(dump_only=True)
+    def handle_error(self, error, data):
+        return_message = ""
+        missing_dict = ["Missing data for required field."]
 
-    date_created = fields.DateTime(dump_only=True)
+        failed_validation_messages = [
+            error.messages[key][0] for key in error.messages if error.messages[key] != missing_dict
+        ]
+        for error_message in failed_validation_messages:
+            return_message += error_message + " "
 
-    date_modified = fields.DateTime(dump_only=True)
+        missing_fields = [key for key in error.messages if error.messages[key] == missing_dict]
+        if missing_fields:
+            return_message += "Missing data for required field: "
+            for field in missing_fields:
+                return_message += field + " "
+
+        return_message = return_message[:-1]
+        return_message += "."
+        raise BadRequestError(return_message)
+
+
+class BaseUserSchema(BaseSchema):
+    @pre_load
+    def pre_process_value(self, data):
+        if "username" in data:
+            data["username"] = data["username"].strip()
+        if "password" in data:
+            data["password"] = data["password"].strip()
+        return data

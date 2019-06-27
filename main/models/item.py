@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+import datetime
+
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 
 from main.database import db
 from main.models.base import BaseModel
@@ -9,6 +11,11 @@ class ItemModel(BaseModel):
 
     name = Column(String(256), nullable=False)
     description = Column(String)
+    created = Column(DateTime,
+                     default=datetime.datetime.now())
+    updated = Column(DateTime,
+                     default=datetime.datetime.now(),
+                     onupdate=datetime.datetime.now())
 
     # Foreign keys
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -24,10 +31,6 @@ class ItemModel(BaseModel):
     @classmethod
     def get_items_by_category_id(cls, category_id):
         return cls.query.filter_by(category_id=category_id).all()
-
-    @classmethod
-    def get_items_by_user_id(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).all()
 
     @classmethod
     def duplicate_item_exists(cls, name, category_id, user_id):

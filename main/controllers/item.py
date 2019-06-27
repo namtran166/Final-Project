@@ -1,70 +1,63 @@
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended import get_jwt_identity, jwt_required
+import datetime
 
-from main.exception import DuplicateItemError, ForbiddenError
+from flask import Blueprint, jsonify
+from flask_jwt_extended import jwt_required
+
 from main.models.item import ItemModel
-from main.schemas.item import ItemSchema
-from main.utils.validation import error_checking, validate_input
+from main.utils.controllers import item_with_user_information, items_with_user_information, item_with_user_and_date
+from main.utils.exception import BadRequestError, ForbiddenError
+from main.utils.validation import error_checking, validate_input, retrieve_and_validate_input
 
 bp_item = Blueprint("item", __name__, url_prefix="/categories/<int:category_id>/items")
 
 
-@bp_item.route("", methods=['GET'])
+@bp_item.route("", methods=["GET"])
 @error_checking
 def get_items(category_id):
     validate_input(category_id=category_id)
     items = ItemModel.get_items_by_category_id(category_id)
-    return jsonify(ItemSchema(many=True).dump(items).data), 200
+    return jsonify(items_with_user_information(items)), 200
 
 
-@bp_item.route("/<int:item_id>", methods=['GET'])
+@bp_item.route("/<int:item_id>", methods=["GET"])
 @error_checking
 def get_item(category_id, item_id):
     item = validate_input(category_id=category_id, item_id=item_id)
-    return jsonify(ItemSchema().dump(item).data), 200
+    return jsonify(item_with_user_information(item)), 200
 
 
-@bp_item.route("", methods=['POST'])
+@bp_item.route("", methods=["POST"])
+@error_checking
 @jwt_required
 def create_item(category_id):
-    validate_input(category_id=category_id)
+    _, user_id, create_data = retrieve_and_validate_input(category_id=category_id)
+    if ItemModel.duplicate_item_exists(create_data["name"], category_id, user_id):
+        raise BadRequestError("You already have this item.")
 
-    user_id = get_jwt_identity()["user"]["id"]
-    data = ItemSchema().load(request.get_json()).data
-
-    if ItemModel.duplicate_item_exists(data["name"], category_id, user_id):
-        raise DuplicateItemError
-
-    item = ItemModel(user_id=user_id, category_id=category_id, **data)
+    item = ItemModel(user_id=user_id, category_id=category_id, **create_data)
     item.save_to_db()
-    return jsonify(ItemSchema().dump(item).data)
+    return jsonify(item_with_user_information(item)), 201
 
 
-@bp_item.route("/<int:item_id>", methods=['DELETE'])
+@bp_item.route("/<int:item_id>", methods=["DELETE"])
+@error_checking
 @jwt_required
 def delete_item(category_id, item_id):
-    item = validate_input(category_id=category_id, item_id=item_id)
-
-    user_id = get_jwt_identity()["user"]["id"]
-
+    item, user_id, _ = retrieve_and_validate_input(category_id=category_id, item_id=item_id)
     if item.user_id != user_id:
-        raise ForbiddenError
+        raise ForbiddenError("You don't have permission to do this.")
 
     item.delete_from_db()
-    return jsonify(ItemSchema().dump(item).data)
+    return jsonify(description="Item deleted."), 200
 
 
-@bp_item.route("/<int:item_id>", methods=['PUT'])
+@bp_item.route("/<int:item_id>", methods=["PUT"])
+@error_checking
 @jwt_required
 def update_item(category_id, item_id):
-    item = validate_input(category_id=category_id, item_id=item_id)
-
-    user_id = get_jwt_identity()["user"]["id"]
-    data = ItemSchema().load(request.get_json()).data
-
+    item, user_id, update_data = retrieve_and_validate_input(category_id=category_id, item_id=item_id)
     if item.user_id != user_id:
-        raise ForbiddenError
+        raise ForbiddenError("You don't have permission to do this.")
 
-    item.update_to_db(**data)
-    item.save_to_db()
-    return jsonify(ItemSchema().dump(item).data)
+    item.update_to_db(updated=datetime.datetime.now(), **update_data)
+    return jsonify(item_with_user_and_date(item)), 200

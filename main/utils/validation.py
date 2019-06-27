@@ -1,10 +1,12 @@
 import functools
 
-from flask import jsonify
+from flask import jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from main.exception import CategoryNotFoundError, ItemNotFoundError, DuplicateUserError, UnauthorizedError
 from main.models.category import CategoryModel
 from main.models.item import ItemModel
+from main.schemas.item import ItemSchema
+from main.utils.exception import NotFoundError, UnauthorizedError, BadRequestError, ForbiddenError
 
 
 def error_checking(func):
@@ -12,16 +14,10 @@ def error_checking(func):
     def check_error(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except CategoryNotFoundError as e:
-            return e.message_return()
-        except ItemNotFoundError as e:
-            return e.message_return()
-        except DuplicateUserError as e:
-            return e.message_return()
-        except UnauthorizedError as e:
-            return e.message_return()
-        except Exception:
-            return jsonify(description="Internal Server Error"), 500
+        except (ForbiddenError, BadRequestError, UnauthorizedError, NotFoundError) as e:
+            return e.messages()
+        except Exception as e:
+            return jsonify(description="Unexpected Internal Server Error occured.".format(e)), 500
 
     return check_error
 
@@ -29,10 +25,18 @@ def error_checking(func):
 def validate_input(**kwargs):
     category = CategoryModel.find_by_id(kwargs['category_id'])
     if category is None:
-        raise CategoryNotFoundError()
+        raise NotFoundError("Category not found.")
     if 'item_id' not in kwargs:
         return category
     item = ItemModel.find_by_id(kwargs['item_id'])
     if item is None:
-        raise ItemNotFoundError()
+        raise NotFoundError("Item not found.")
     return item
+
+
+@jwt_required
+def retrieve_and_validate_input(**kwargs):
+    category_or_item = validate_input(**kwargs)
+    user_id = get_jwt_identity()["user"]["id"]
+    data = ItemSchema().load(request.get_json()).data
+    return category_or_item, user_id, data
