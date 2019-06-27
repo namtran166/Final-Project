@@ -4,13 +4,11 @@ from flask_jwt_extended import JWTManager
 from main.controllers.category import bp_category
 from main.controllers.item import bp_item
 from main.controllers.user import bp_user, bp_auth
-from main.utils.exception import UnauthorizedError
+from configs import config
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://namtran166:123456@@127.0.0.1/gotit"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'brian'
+app.config.from_object(config)
 jwt = JWTManager(app)
 
 
@@ -28,4 +26,4 @@ if __name__ == '__main__':
     from main.database import db
 
     db.init_app(app)
-    app.run(port=5000, debug=True)
+    app.run(port=5000)

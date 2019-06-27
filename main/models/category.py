@@ -8,7 +8,7 @@ class CategoryModel(BaseModel):
     __tablename__ = 'category'
 
     name = Column(String(256), nullable=False, unique=True)
-    description = Column(String)
+    description = Column(String())
 
     # Relationship
     items = db.relationship('ItemModel', lazy=True)

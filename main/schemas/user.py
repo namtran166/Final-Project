@@ -30,5 +30,5 @@ class UserSchema(BaseUserSchema):
 
 
 class AuthenticationSchema(BaseUserSchema):
-    username = fields.String(required=True)
-    password = fields.String(required=True)
+    username = fields.String(required=True, load_only=True)
+    password = fields.String(required=True, load_only=True)
