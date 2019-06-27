@@ -19,11 +19,6 @@ def create_tables():
     db.create_all()
 
 
-@jwt.expired_token_loader
-def expired_token_handler():
-    raise UnauthorizedError("Access token has expired.")
-
-
 app.register_blueprint(bp_category)
 app.register_blueprint(bp_item)
 app.register_blueprint(bp_user)
