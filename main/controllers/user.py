@@ -23,7 +23,7 @@ def register_user():
     del data["password"]
     user = UserModel(**data)
     user.save_to_db()
-    return jsonify(UserSchema().dump(user).data), 200
+    return jsonify(UserSchema().dump(user).data), 201
 
 
 @bp_auth.route("", methods=['POST'])
@@ -37,6 +37,6 @@ def authenticate():
         access_token = create_access_token(identity={"user": UserSchema().dump(user).data})
         authentication = UserSchema().dump(user).data
         authentication["access_token"] = access_token
-        return jsonify(authentication), 201
+        return jsonify(authentication), 200
 
     raise UnauthorizedError("Invalid Credentials.")

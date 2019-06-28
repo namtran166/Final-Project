@@ -1,5 +1,6 @@
-from configs.base import Config
 from datetime import timedelta
+
+from configs.base import Config
 
 
 class DevelopmentConfig(Config):
@@ -11,6 +12,7 @@ class DevelopmentConfig(Config):
 
     # JWT-Extended
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
+    TESTING = True
 
 
 config = DevelopmentConfig

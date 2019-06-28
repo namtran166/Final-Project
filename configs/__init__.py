@@ -1,5 +1,5 @@
-import os
 import importlib
+import os
 
 env = os.getenv("FLASK_ENV", "development")
 

@@ -21,7 +21,8 @@ class BaseSchema(Schema):
                 return_message += field + " "
 
         return_message = return_message[:-1]
-        return_message += "."
+        if missing_fields:
+            return_message += "."
         raise BadRequestError(return_message)
 
 
