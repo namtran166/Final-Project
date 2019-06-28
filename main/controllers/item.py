@@ -1,7 +1,7 @@
 import datetime
 
 from flask import Blueprint, jsonify
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from main.models.item import ItemModel
 from main.utils.controllers import item_with_user_information, items_with_user_information, item_with_user_and_date
@@ -43,7 +43,9 @@ def create_item(category_id):
 @error_checking
 @jwt_required
 def delete_item(category_id, item_id):
-    item, user_id, _ = retrieve_and_validate_input(category_id=category_id, item_id=item_id)
+    item = validate_input(category_id=category_id, item_id=item_id)
+    user_id = get_jwt_identity()["user"]["id"]
+
     if item.user_id != user_id:
         raise ForbiddenError("You don't have permission to do this.")
 

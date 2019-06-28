@@ -10,6 +10,7 @@ def test_get_categories_valid(client):
     json_response = load_decoded_response(response)
 
     assert response.status_code == 200
+    assert type(json_response) is list
     for category in json_response:
         assert all(key in category for key in ["id", "name", "description", "user"]) is True
         assert all(key in category["user"] for key in ["id", "username"]) is True
