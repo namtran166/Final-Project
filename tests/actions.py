@@ -3,28 +3,16 @@ from tests.tester import Tester
 from tests.utils import load_decoded_response, create_headers
 
 
-def tester_register(client, authentication):
+def _tester_register(client, authentication):
     tester = Tester(client)
     response = tester.register(authentication)
     json_response = load_decoded_response(response)
     return response, json_response
 
 
-def tester_authorize(client, authentication):
+def _tester_authorize(client, authentication):
     tester = Tester(client)
     response = tester.authorize(authentication)
-    json_response = load_decoded_response(response)
-    return response, json_response
-
-
-def tester_post_item(client, authentication, category_id, data):
-    tester = Tester(client)
-    access_token = tester.get_access_token(authentication)
-    response = client.post(
-        "/categories/{}/items".format(category_id),
-        headers=create_headers(access_token=access_token),
-        data=json.dumps(data)
-    )
     json_response = load_decoded_response(response)
     return response, json_response
 

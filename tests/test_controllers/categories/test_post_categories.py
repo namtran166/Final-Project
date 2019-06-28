@@ -39,14 +39,14 @@ def test_post_categories_valid(client, data, status_code):
                 400,
                 "Missing data for required field: name."
         ),
-        # Test case: Name is too long
+        # Test case: Name is too short
         (
                 {
-                    "name": generate_random_string(257),
+                    "name": "      ",
                     "description": "19th-century Russian novelist."
                 },
                 400,
-                "A category name must have must have at most 256 characters."
+                "A category name must have must have at least 1 character."
         ),
         # Test case: Category name already exists
         (

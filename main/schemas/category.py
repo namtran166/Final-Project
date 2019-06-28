@@ -8,7 +8,7 @@ class CategorySchema(BaseSchema):
     name = fields.String(
         required=True,
         unique=True,
-        validate=validate.Length(min=1, error="A category name must have must have at most 256 characters.")
+        validate=validate.Length(min=1, error="A category name must have must have at least 1 character.")
     )
 
     description = fields.String()

@@ -1,6 +1,6 @@
 import pytest
 
-from tests.actions import tester_register
+from tests.actions import _tester_register
 from tests.utils import generate_random_string
 
 
@@ -18,7 +18,7 @@ from tests.utils import generate_random_string
         # Test case: Valid user with space
         (
                 {
-                    "username": "    brian124  ",
+                    "username": "    brian125  ",
                     "password": "    123456 "
                 },
                 201
@@ -26,7 +26,7 @@ from tests.utils import generate_random_string
     ]
 )
 def test_post_users_valid(client, authentication, status_code):
-    response, json_response = tester_register(client, authentication)
+    response, json_response = _tester_register(client, authentication)
 
     assert response.status_code == status_code
     assert all(key in json_response for key in ["id", "username", "first_name", "last_name"]) is True
@@ -131,7 +131,7 @@ def test_post_users_valid(client, authentication, status_code):
     ]
 )
 def test_post_users_invalid(client, authentication, status_code, description):
-    response, json_response = tester_register(client, authentication)
+    response, json_response = _tester_register(client, authentication)
 
     assert response.status_code == status_code
     assert json_response["description"] == description

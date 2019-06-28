@@ -1,6 +1,6 @@
 import pytest
 
-from tests.actions import tester_authorize
+from tests.actions import _tester_authorize
 
 
 @pytest.mark.parametrize(
@@ -25,7 +25,7 @@ from tests.actions import tester_authorize
     ]
 )
 def test_post_auth_valid(client, authentication, status_code):
-    response, json_response = tester_authorize(client, authentication)
+    response, json_response = _tester_authorize(client, authentication)
 
     assert response.status_code == status_code
     assert all(key in json_response for key in ["access_token", "id", "username", "first_name", "last_name"]) is True
@@ -79,7 +79,7 @@ def test_post_auth_valid(client, authentication, status_code):
     ]
 )
 def test_post_auth_invalid(client, authentication, status_code, description):
-    response, json_response = tester_authorize(client, authentication)
+    response, json_response = _tester_authorize(client, authentication)
 
     assert response.status_code == status_code
     assert json_response["description"] == description

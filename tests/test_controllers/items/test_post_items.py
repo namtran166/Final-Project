@@ -1,7 +1,8 @@
 import json
 import pytest
 from tests.utils import create_headers, load_decoded_response, generate_random_string
-from tests.actions import initialize_items, tester_post_item
+from tests.actions import initialize_items
+from tests.tester import Tester
 
 
 @pytest.mark.parametrize(
@@ -38,7 +39,7 @@ from tests.actions import initialize_items, tester_post_item
 )
 def test_post_items_with_valid_input(client, authentication, category_id, data):
     initialize_items(client)
-    response, json_response = tester_post_item(client, authentication, category_id, data)
+    response, json_response = _tester_post_item(client, authentication, category_id, data)
 
     assert response.status_code == 201
     assert all(key in json_response for key in ["id", "name", "description", "user"]) is True
@@ -58,16 +59,16 @@ def test_post_items_with_valid_input(client, authentication, category_id, data):
                 400,
                 "Missing data for required field: name."
         ),
-        # Test case: Name is too long
+        # Test case: Name is too short
         (
                 {"username": "brian123", "password": "123456"},
                 1,
                 {
-                    "name": generate_random_string(257),
+                    "name": "     ",
                     "description": "A book about the risks of government overreach and totalitarianism."
                 },
                 400,
-                "An item name must have must have at most 256 characters."
+                "An item name must have must have at least 1 character."
         ),
         # Test case: Item already exists
         (
@@ -95,7 +96,7 @@ def test_post_items_with_valid_input(client, authentication, category_id, data):
 )
 def test_post_items_with_invalid_input(client, authentication, category_id, data, status_code, description):
     initialize_items(client)
-    response, json_response = tester_post_item(client, authentication, category_id, data)
+    response, json_response = _tester_post_item(client, authentication, category_id, data)
 
     assert response.status_code == status_code
     assert json_response["description"] == description
@@ -127,3 +128,15 @@ def test_add_item_with_invalid_user(client):
     json_response = load_decoded_response(response)
     assert response.status_code == 401
     assert json_response["description"] == "Access token is invalid."
+
+
+def _tester_post_item(client, authentication, category_id, data):
+    tester = Tester(client)
+    access_token = tester.get_access_token(authentication)
+    response = client.post(
+        "/categories/{}/items".format(category_id),
+        headers=create_headers(access_token=access_token),
+        data=json.dumps(data)
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response

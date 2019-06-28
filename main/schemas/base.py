@@ -7,7 +7,7 @@ class BaseSchema(Schema):
     @pre_load
     def pre_process_value(self, data):
         for key in data:
-            data.key = data.key.strip()
+            data[key] = data[key].strip()
 
     def handle_error(self, error, data):
         return_message = ""

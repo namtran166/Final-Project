@@ -5,7 +5,7 @@ from main.database import db
 from tests.utils import initialize_categories, initialize_users, drop_tables
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture
 def app_testing():
     with app.app_context():
         initialize_categories()
@@ -15,6 +15,6 @@ def app_testing():
     db.create_all(app=app)
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture
 def client(app_testing):
     return app_testing.test_client()

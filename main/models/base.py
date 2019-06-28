@@ -13,12 +13,20 @@ class BaseModel(db.Model):
         return cls.query.get(_id)
 
     def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise Exception
 
     def delete_from_db(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            raise Exception
 
     def update_to_db(self, **kwargs):
         for key, value in kwargs.items():

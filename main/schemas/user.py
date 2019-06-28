@@ -1,9 +1,9 @@
 from marshmallow import fields, validate
 
-from main.schemas.base import BaseUserSchema
+from main.schemas.base import BaseSchema
 
 
-class UserSchema(BaseUserSchema):
+class UserSchema(BaseSchema):
     id = fields.Integer(dump_only=True)
 
     username = fields.String(
@@ -29,6 +29,6 @@ class UserSchema(BaseUserSchema):
     )
 
 
-class AuthenticationSchema(BaseUserSchema):
+class AuthenticationSchema(BaseSchema):
     username = fields.String(required=True, load_only=True)
     password = fields.String(required=True, load_only=True)
