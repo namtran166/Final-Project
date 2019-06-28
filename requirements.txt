@@ -1,5 +1,5 @@
 Flask==1.0.3
-Flask-JWT==0.3.2
+Flask-JWT-Extended==3.19.0
 Flask-SQLAlchemy==2.4.0
 marshmallow==2.19.5
 mysql-connector==2.2.9

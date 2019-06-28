@@ -10,7 +10,7 @@ class ItemModel(BaseModel):
     __tablename__ = 'item'
 
     name = Column(String(256), nullable=False)
-    description = Column(String(1024))
+    description = Column(String(65535))
     created = Column(DateTime,
                      default=datetime.datetime.now())
     updated = Column(DateTime,

@@ -12,7 +12,6 @@ class DevelopmentConfig(Config):
 
     # JWT-Extended
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
-    TESTING = True
 
 
 config = DevelopmentConfig

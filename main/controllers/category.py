@@ -11,7 +11,7 @@ bp_category = Blueprint("category", __name__, url_prefix="/categories")
 @bp_category.route("", methods=['GET'])
 @error_checking
 def get_categories():
-    categories = CategoryModel.get_all_categories()
+    categories = CategoryModel.get_categories()
     return jsonify(CategorySchema(many=True).dump(categories).data), 200
 
 

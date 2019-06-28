@@ -8,7 +8,7 @@ class CategoryModel(BaseModel):
     __tablename__ = 'category'
 
     name = Column(String(256), nullable=False, unique=True)
-    description = Column(String(1024))
+    description = Column(String(65535))
 
     # Relationship
     items = db.relationship('ItemModel', lazy=True)
@@ -21,5 +21,5 @@ class CategoryModel(BaseModel):
         return cls.query.filter_by(name=name).first()
 
     @classmethod
-    def get_all_categories(cls):
+    def get_categories(cls):
         return cls.query.all()
