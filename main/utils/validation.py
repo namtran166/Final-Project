@@ -2,7 +2,8 @@ import functools
 
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from jwt.exceptions import InvalidSignatureError, ExpiredSignatureError
+from flask_jwt_extended.exceptions import NoAuthorizationError
+from jwt.exceptions import InvalidSignatureError, ExpiredSignatureError, DecodeError
 
 from main.models.category import CategoryModel
 from main.models.item import ItemModel
@@ -17,11 +18,12 @@ def error_checking(func):
             return func(*args, **kwargs)
         except (ForbiddenError, BadRequestError, UnauthorizedError, NotFoundError) as e:
             return e.messages()
-        except InvalidSignatureError:
+        except (InvalidSignatureError, DecodeError, NoAuthorizationError):
             return jsonify(description="Access token is invalid."), 401
         except ExpiredSignatureError:
             return jsonify(description="Access token has expired."), 401
-        except Exception:
+        except Exception as e:
+            print(e.__class__)
             return jsonify(description="Unexpected Internal Server Error occurred."), 500
 
     return check_error

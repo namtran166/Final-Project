@@ -4,6 +4,11 @@ from main.utils.exception import BadRequestError
 
 
 class BaseSchema(Schema):
+    @pre_load
+    def pre_process_value(self, data):
+        for key in data:
+            data.key = data.key.strip()
+
     def handle_error(self, error, data):
         return_message = ""
         missing_dict = ["Missing data for required field."]
@@ -24,13 +29,3 @@ class BaseSchema(Schema):
         if missing_fields:
             return_message += "."
         raise BadRequestError(return_message)
-
-
-class BaseUserSchema(BaseSchema):
-    @pre_load
-    def pre_process_value(self, data):
-        if "username" in data:
-            data["username"] = data["username"].strip()
-        if "password" in data:
-            data["password"] = data["password"].strip()
-        return data

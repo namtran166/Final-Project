@@ -25,6 +25,7 @@ def load_decoded_response(response):
 def generate_random_string(length):
     return ''.join(choice(ascii_lowercase) for _ in range(length))
 
+
 def initialize_categories():
     categories = [
         {

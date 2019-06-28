@@ -9,8 +9,8 @@ from main.models.base import BaseModel
 class ItemModel(BaseModel):
     __tablename__ = 'item'
 
-    name = Column(String(256), nullable=False)
-    description = Column(String(65535))
+    name = Column(String(65000), nullable=False)
+    description = Column(String(65000))
     created = Column(DateTime,
                      default=datetime.datetime.now())
     updated = Column(DateTime,

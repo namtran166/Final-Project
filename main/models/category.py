@@ -7,8 +7,8 @@ from main.models.base import BaseModel
 class CategoryModel(BaseModel):
     __tablename__ = 'category'
 
-    name = Column(String(256), nullable=False, unique=True)
-    description = Column(String(65535))
+    name = Column(String(65000), nullable=False, unique=True)
+    description = Column(String(65000))
 
     # Relationship
     items = db.relationship('ItemModel', lazy=True)
