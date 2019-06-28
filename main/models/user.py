@@ -8,9 +8,9 @@ class UserModel(BaseModel):
     __tablename__ = 'user'
 
     username = Column(String(64), nullable=False, unique=True)
-    hashed_password = Column(String(1024), nullable=False)
-    first_name = Column(String(64))
-    last_name = Column(String(64))
+    hashed_password = Column(String(128), nullable=False)
+    first_name = Column(String(32))
+    last_name = Column(String(32))
 
     # Relationship
     items = db.relationship('ItemModel', lazy=True)

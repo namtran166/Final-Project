@@ -11,7 +11,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
     # JWT-Extended
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=12)
 
 
 config = DevelopmentConfig

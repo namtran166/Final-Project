@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 
-class Config:
+class Config(object):
     # SQL Alchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -10,4 +10,4 @@ class Config:
 
     # JWT-Extended
     JWT_SECRET_KEY = "namtran166"
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=3)

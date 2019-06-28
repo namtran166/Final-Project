@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer
 
 from main.database import db
+from main.utils.exception import DatabaseError
 
 
 class BaseModel(db.Model):
@@ -16,19 +17,21 @@ class BaseModel(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
-            raise Exception
+            raise DatabaseError("Unexpected Error trying to save to the database. "
+                                "Error message: {}".format(str(e)))
 
     def delete_from_db(self):
         try:
             db.session.add(self)
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
-            raise Exception
+            raise DatabaseError("Unexpected Error trying to delete to the database. "
+                                "Error message: {}".format(str(e)))
 
     def update_to_db(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        BaseModel.save_to_db(self)
+        self.save_to_db()

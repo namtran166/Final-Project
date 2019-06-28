@@ -41,7 +41,6 @@ def validate_input(**kwargs):
     return item
 
 
-@jwt_required
 def retrieve_and_validate_input(**kwargs):
     category_or_item = validate_input(**kwargs)
     user_id = get_jwt_identity()["user"]["id"]

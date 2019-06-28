@@ -18,8 +18,6 @@ class UserSchema(BaseSchema):
         validate=validate.Length(min=6, max=64, error="A password must have between 6-64 characters.")
     )
 
-    hashed_password = fields.String(load_only=True)
-
     first_name = fields.String(
         validate=validate.Length(max=64, error="First name must be at most 64 characters.")
     )

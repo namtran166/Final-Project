@@ -50,7 +50,7 @@ def delete_item(category_id, item_id):
         raise ForbiddenError("You don't have permission to do this.")
 
     item.delete_from_db()
-    return jsonify(description="Item deleted."), 200
+    return jsonify({}), 204
 
 
 @bp_item.route("/<int:item_id>", methods=["PUT"])
@@ -61,5 +61,5 @@ def update_item(category_id, item_id):
     if item.user_id != user_id:
         raise ForbiddenError("You don't have permission to do this.")
 
-    item.update_to_db(updated=datetime.datetime.now(), **update_data)
+    item.update_to_db(**update_data)
     return jsonify(item_with_user_and_date(item)), 200

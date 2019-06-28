@@ -17,7 +17,7 @@ def register_user():
     data = UserSchema().load(request.get_json()).data
     if UserModel.find_by_username(data["username"]):
         raise BadRequestError("Username already exists.")
-
+    # comment
     hashed_password = generate_password_hash(data["password"])
     data["hashed_password"] = hashed_password
     del data["password"]
@@ -35,8 +35,8 @@ def authenticate():
 
     if user and check_password_hash(user.hashed_password, data["password"]):
         access_token = create_access_token(identity={"user": UserSchema().dump(user).data})
-        authentication = UserSchema().dump(user).data
-        authentication["access_token"] = access_token
-        return jsonify(authentication), 200
+        user = UserSchema().dump(user).data
+        user["access_token"] = access_token
+        return jsonify(user), 200
 
     raise UnauthorizedError("Invalid Credentials.")

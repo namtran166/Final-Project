@@ -5,7 +5,7 @@ from main.utils.exception import BadRequestError
 
 class BaseSchema(Schema):
     @pre_load
-    def pre_process_value(self, data):
+    def pre_load(self, data):
         for key in data:
             data[key] = data[key].strip()
 

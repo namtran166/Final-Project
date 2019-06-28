@@ -9,13 +9,13 @@ from main.models.base import BaseModel
 class ItemModel(BaseModel):
     __tablename__ = 'item'
 
-    name = Column(String(2000), nullable=False)
-    description = Column(String(2000))
+    name = Column(String(256), nullable=False)
+    description = Column(String(1024))
     created = Column(DateTime,
-                     default=datetime.datetime.now())
+                     default=datetime.datetime.now)
     updated = Column(DateTime,
-                     default=datetime.datetime.now(),
-                     onupdate=datetime.datetime.now())
+                     default=datetime.datetime.now,
+                     onupdate=datetime.datetime.now)
 
     # Foreign keys
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)

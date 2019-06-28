@@ -10,10 +10,14 @@ from main.database import db
 
 app = Flask(__name__)
 app.config.from_object(config)
+# comment
 jwt = JWTManager(app)
+# comment
 db.init_app(app)
+# comment
 db.create_all(app=app)
 
+# comment
 app.register_blueprint(bp_category)
 app.register_blueprint(bp_item)
 app.register_blueprint(bp_user)

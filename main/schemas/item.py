@@ -1,6 +1,7 @@
 from marshmallow import fields, validate
 
 from main.schemas.base import BaseSchema
+from main.schemas.user import UserSchema
 
 
 class ItemSchema(BaseSchema):
@@ -14,8 +15,8 @@ class ItemSchema(BaseSchema):
 
     category_id = fields.Integer(required=True, dump_only=True)
 
-    user_id = fields.Integer(required=True, dump_only=True)
-
     created = fields.DateTime(dump_only=True)
 
     updated = fields.DateTime(dump_only=True)
+
+    user = fields.Nested(UserSchema, only=("id", "username"))
