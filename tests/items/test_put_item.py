@@ -1,8 +1,10 @@
 import json
+
 import pytest
-from tests.utils import create_headers, load_decoded_response, generate_random_string
-from tests.database_setup import initialize_items
+
 from tests.actions import put_item
+from tests.database_setup import initialize_items
+from tests.utils import create_headers, load_decoded_response, generate_random_string
 
 
 @pytest.mark.parametrize(
@@ -141,7 +143,7 @@ def test_put_item_with_invalid_token(client, access_token):
     response = client.delete(
         "/categories/{}/items/{}".format(1, 1),
         headers=create_headers(access_token=access_token),
-        data = json.dumps({
+        data=json.dumps({
             "name": "1984",
             "description": "A book about the risks of government overreach and totalitarianism."
         })
@@ -150,4 +152,3 @@ def test_put_item_with_invalid_token(client, access_token):
 
     assert response.status_code == 401
     assert json_response["description"] == "Access token is invalid."
-

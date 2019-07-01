@@ -1,7 +1,7 @@
 import pytest
-import json
-from tests.utils import create_headers, load_decoded_response, generate_random_string
+
 from tests.actions import post_categories
+from tests.utils import generate_random_string
 
 
 @pytest.mark.parametrize(

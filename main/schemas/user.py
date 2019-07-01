@@ -1,9 +1,14 @@
-from marshmallow import fields, validate
+from marshmallow import fields, validate, pre_load
 
 from main.schemas.base import BaseSchema
 
 
 class UserSchema(BaseSchema):
+    @pre_load
+    def pre_load(self, data):
+        for key in data:
+            data[key] = data[key].strip()
+
     id = fields.Integer(dump_only=True)
 
     username = fields.String(

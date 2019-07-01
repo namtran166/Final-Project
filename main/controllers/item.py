@@ -2,8 +2,10 @@ from flask import Blueprint, jsonify
 
 from main.models.item import ItemModel
 from main.schemas.item import ItemSchema
+from main.schemas.pagination import PaginationSchema
 from main.utils.exception import BadRequestError, ForbiddenError
-from main.utils.helper import error_checking, validate_category, validate_item, load_data, get_user_id
+from main.utils.helper import error_checking, validate_category, validate_item, load_data, get_user_id, \
+    generate_page_information
 
 bp_item = Blueprint("item", __name__, url_prefix="/categories/<int:category_id>/items")
 
@@ -11,9 +13,10 @@ bp_item = Blueprint("item", __name__, url_prefix="/categories/<int:category_id>/
 @bp_item.route("", methods=["GET"])
 @error_checking
 @validate_category
-def get_items(**kwargs):
-    items = ItemModel.query.filter_by(category_id=kwargs["category_id"]).all()
-    return jsonify(ItemSchema(many=True, only=("id", "name", "description", "created", "user")).dump(items).data), 200
+@load_data(PaginationSchema)
+@generate_page_information
+def get_items(cur_page=None, **_):
+    return jsonify(PaginationSchema().dump(cur_page).data), 200
 
 
 @bp_item.route("/<int:item_id>", methods=["GET"])

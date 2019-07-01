@@ -1,8 +1,10 @@
 import json
+
 import pytest
-from tests.utils import create_headers, load_decoded_response, generate_random_string
-from tests.database_setup import initialize_items
+
 from tests.actions import post_items
+from tests.database_setup import initialize_items
+from tests.utils import create_headers, load_decoded_response, generate_random_string
 
 
 @pytest.mark.parametrize(
@@ -146,4 +148,3 @@ def test_post_items_with_invalid_token(client, access_token):
 
     assert response.status_code == 401
     assert json_response["description"] == "Access token is invalid."
-

@@ -1,4 +1,5 @@
 import json
+
 from tests.utils import load_decoded_response, create_headers
 
 
@@ -55,10 +56,11 @@ def post_categories(client, data):
     return response, json_response
 
 
-def get_items(client, category_id=None):
+def get_items(client, category_id=None, data=None):
     response = client.get(
         "/categories/{}/items".format(category_id),
         headers=create_headers(),
+        data=json.dumps(data)
     )
     json_response = load_decoded_response(response)
     return response, json_response

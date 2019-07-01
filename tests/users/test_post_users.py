@@ -116,18 +116,7 @@ def test_post_users_valid(client, authentication, status_code):
                 },
                 400,
                 "Last name must be at most 64 characters."
-        ),
-        # Test case: Multiple errors
-        (
-                {
-                    "password": "123456",
-                    "first_name": generate_random_string(65),
-                    "last_name": generate_random_string(65)
-                },
-                400,
-                "First name must be at most 64 characters. Last name must be at most 64 characters. "
-                "Missing data for required field: username."
-        ),
+        )
     ]
 )
 def test_post_users_invalid(client, authentication, status_code, description):

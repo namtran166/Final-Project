@@ -1,14 +1,9 @@
-from marshmallow import Schema, pre_load
+from marshmallow import Schema
 
 from main.utils.exception import BadRequestError
 
 
 class BaseSchema(Schema):
-    @pre_load
-    def pre_load(self, data):
-        for key in data:
-            data[key] = data[key].strip()
-
     def handle_error(self, error, data):
         return_message = ""
         missing_dict = ["Missing data for required field."]

@@ -17,7 +17,9 @@ def error_checking(func):
             return func(*args, **kwargs)
         except (ForbiddenError, BadRequestError, UnauthorizedError, NotFoundError) as e:
             return e.messages()
-        except Exception:
+        except Exception as e:
+            print(e)
+            print(e.__class__)
             return jsonify(description="Unexpected Internal Server Error occurred."), 500
 
     return check_error
@@ -71,5 +73,27 @@ def get_user_id(func):
             raise UnauthorizedError("Access token has expired.")
         except (InvalidSignatureError, DecodeError, NoAuthorizationError):
             raise UnauthorizedError("Access token is invalid.")
+
+    return wrapper
+
+
+def generate_page_information(func):
+    @functools.wraps(func)
+    def wrapper(data=None, category_id=None, *args, **kwargs):
+        items = ItemModel.query.filter_by(category_id=category_id)
+        pagination = items.paginate(page=data["page"], per_page=data["per_page"], error_out=False)
+
+        # If the requested page is too large, revert back to the maximum page
+        if pagination.pages < data["page"]:
+            pagination = items.paginate(page=pagination.pages, per_page=data["per_page"], error_out=False)
+
+        cur_page = {
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "total_items": pagination.total,
+            "total_pages": pagination.pages,
+            "items": pagination.items
+        }
+        return func(cur_page=cur_page, *args, **kwargs)
 
     return wrapper

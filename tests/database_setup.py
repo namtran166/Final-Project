@@ -1,6 +1,5 @@
 import json
-from tests.actions import get_access_token
-from tests.utils import create_headers
+
 from sqlalchemy import create_engine
 from werkzeug.security import generate_password_hash
 
@@ -8,6 +7,8 @@ from configs import config
 from main.models.category import CategoryModel
 from main.models.item import ItemModel
 from main.models.user import UserModel
+from tests.actions import get_access_token
+from tests.utils import create_headers
 
 
 def initialize_categories():
