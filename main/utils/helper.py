@@ -8,6 +8,7 @@ from jwt.exceptions import InvalidSignatureError, ExpiredSignatureError, DecodeE
 from main.models.category import CategoryModel
 from main.models.item import ItemModel
 from main.utils.exception import NotFoundError, UnauthorizedError, BadRequestError, ForbiddenError
+from configs import config
 
 
 def error_checking(func):
@@ -81,8 +82,14 @@ def generate_page_information(func):
     @functools.wraps(func)
     def wrapper(data=None, category_id=None, *args, **kwargs):
         items = ItemModel.query.filter_by(category_id=category_id)
-        pagination = items.paginate(page=data["page"], per_page=data["per_page"], error_out=False)
+        # Automatically return DEFAULT_PAGE if no specific page was requested
+        if "page" not in data:
+            data["page"] = config.DEFAULT_PAGE
+        # Automatically set items per page to ITEMS_PER_PAGE if no per_page was specified
+        if "per_page" not in data:
+            data["per_page"] = config.ITEMS_PER_PAGE
 
+        pagination = items.paginate(page=data["page"], per_page=data["per_page"], error_out=False)
         # If the requested page is too large, revert back to the maximum page
         if pagination.pages < data["page"]:
             pagination = items.paginate(page=pagination.pages, per_page=data["per_page"], error_out=False)

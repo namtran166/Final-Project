@@ -14,6 +14,14 @@ from tests.database_setup import initialize_items
         # Test case: Page requested exceeds number of pages, revert back to the maximum page
         (
                 {"page": 3, "per_page": 2}
+        ),
+        # Test case: No page requested, automatically return page number 1
+        (
+                {"per_page": 2}
+        ),
+        # Test case: Items per page is missing, automatically set it to 20
+        (
+                {"page": 1}
         )
     ]
 )
