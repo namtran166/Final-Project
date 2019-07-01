@@ -11,8 +11,6 @@ class ItemModel(BaseModel):
 
     name = Column(String(256), nullable=False)
     description = Column(String(1024))
-    created = Column(DateTime,
-                     default=datetime.datetime.now)
     updated = Column(DateTime,
                      default=datetime.datetime.now,
                      onupdate=datetime.datetime.now)
@@ -27,11 +25,3 @@ class ItemModel(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super(ItemModel, self).__init__(*args, **kwargs)
-
-    @classmethod
-    def get_items_by_category_id(cls, category_id):
-        return cls.query.filter_by(category_id=category_id).all()
-
-    @classmethod
-    def duplicate_item_exists(cls, name, category_id, user_id):
-        return cls.query.filter_by(name=name, category_id=category_id, user_id=user_id).count() != 0

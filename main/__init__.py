@@ -10,14 +10,14 @@ from main.database import db
 
 app = Flask(__name__)
 app.config.from_object(config)
-# comment
+# Create the JWTManager instance to handle all authentication actions using JWT-token
 jwt = JWTManager(app)
-# comment
+# Initialize our Flask app with this database setup
 db.init_app(app)
-# comment
+# Create all the tables specified in this app
 db.create_all(app=app)
 
-# comment
+# Register endpoints for our Flask app
 app.register_blueprint(bp_category)
 app.register_blueprint(bp_item)
 app.register_blueprint(bp_user)

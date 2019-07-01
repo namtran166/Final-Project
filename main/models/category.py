@@ -15,7 +15,3 @@ class CategoryModel(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super(CategoryModel, self).__init__(*args, **kwargs)
-
-    @classmethod
-    def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first()

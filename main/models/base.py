@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer
+import datetime
+
+from sqlalchemy import Column, Integer, DateTime
 
 from main.database import db
 from main.utils.exception import DatabaseError
@@ -8,6 +10,7 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    created = Column(DateTime, default=datetime.datetime.now)
 
     @classmethod
     def find_by_id(cls, _id):
@@ -24,7 +27,7 @@ class BaseModel(db.Model):
 
     def delete_from_db(self):
         try:
-            db.session.add(self)
+            db.session.delete(self)
             db.session.commit()
         except Exception as e:
             db.session.rollback()

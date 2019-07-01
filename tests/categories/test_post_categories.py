@@ -1,6 +1,7 @@
 import pytest
 import json
 from tests.utils import create_headers, load_decoded_response, generate_random_string
+from tests.actions import post_categories
 
 
 @pytest.mark.parametrize(
@@ -17,15 +18,11 @@ from tests.utils import create_headers, load_decoded_response, generate_random_s
     ]
 )
 def test_post_categories_valid(client, data, status_code):
-    response = client.post(
-        "/categories",
-        headers=create_headers(),
-        data=json.dumps(data)
-    )
-    json_response = load_decoded_response(response)
+    response, json_response = post_categories(client, data)
 
     assert response.status_code == status_code
-    assert all(key in json_response for key in ["id", "name", "description"]) is True
+    assert all(key in json_response for key in ["id", "name", "description", "items"]) is True
+    assert json_response["items"] == []
 
 
 @pytest.mark.parametrize(
@@ -46,7 +43,25 @@ def test_post_categories_valid(client, data, status_code):
                     "description": "19th-century Russian novelist."
                 },
                 400,
-                "A category name must have must have at least 1 character."
+                "A category name must have between 1-256 characters."
+        ),
+        # Test case: Name is too long
+        (
+                {
+                    "name": generate_random_string(257),
+                    "description": "19th-century Russian novelist."
+                },
+                400,
+                "A category name must have between 1-256 characters."
+        ),
+        # Test case: Description is too long
+        (
+                {
+                    "name": "Fyodor Dostoevsky",
+                    "description": generate_random_string(1025)
+                },
+                400,
+                "A category description must have at most 1024 characters."
         ),
         # Test case: Category name already exists
         (
@@ -60,12 +75,7 @@ def test_post_categories_valid(client, data, status_code):
     ]
 )
 def test_post_categories_invalid(client, data, status_code, description):
-    response = client.post(
-        "/categories",
-        headers=create_headers(),
-        data=json.dumps(data)
-    )
-    json_response = load_decoded_response(response)
+    response, json_response = post_categories(client, data)
 
     assert response.status_code == status_code
     assert json_response["description"] == description

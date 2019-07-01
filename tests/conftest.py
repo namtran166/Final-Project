@@ -2,7 +2,7 @@ import pytest
 
 from main import app
 from main.database import db
-from tests.utils import initialize_categories, initialize_users, drop_tables
+from tests.database_setup import initialize_categories, initialize_users, drop_tables
 
 
 @pytest.fixture

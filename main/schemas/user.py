@@ -19,14 +19,9 @@ class UserSchema(BaseSchema):
     )
 
     first_name = fields.String(
-        validate=validate.Length(max=64, error="First name must be at most 64 characters.")
+        validate=validate.Length(max=32, error="First name must be at most 64 characters.")
     )
 
     last_name = fields.String(
-        validate=validate.Length(max=64, error="Last name must be at most 64 characters.")
+        validate=validate.Length(max=32, error="Last name must be at most 64 characters.")
     )
-
-
-class AuthenticationSchema(BaseSchema):
-    username = fields.String(required=True, load_only=True)
-    password = fields.String(required=True, load_only=True)

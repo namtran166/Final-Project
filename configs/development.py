@@ -10,6 +10,9 @@ class DevelopmentConfig(Config):
     # Flask
     DEBUG = True
 
+    # PyTest
+    TESTING = False
+
     # JWT-Extended
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=12)
 
