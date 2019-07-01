@@ -1,7 +1,18 @@
 import pytest
+import json
 
-from tests.actions import get_items
 from tests.database_setup import initialize_items
+from tests.utils import create_headers, load_decoded_response
+
+
+def get_items(client, category_id=None, data=None):
+    response = client.get(
+        "/categories/{}/items".format(category_id),
+        headers=create_headers(),
+        data=json.dumps(data)
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response
 
 
 @pytest.mark.parametrize(

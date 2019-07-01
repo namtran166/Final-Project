@@ -1,7 +1,17 @@
 import pytest
+import json
 
-from tests.actions import post_categories
-from tests.utils import generate_random_string
+from tests.utils import create_headers, generate_random_string, load_decoded_response
+
+
+def post_categories(client, data):
+    response = client.post(
+        "/categories",
+        headers=create_headers(),
+        data=json.dumps(data)
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response
 
 
 @pytest.mark.parametrize(

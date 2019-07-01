@@ -1,4 +1,13 @@
-from tests.actions import get_category
+from tests.utils import create_headers, load_decoded_response
+
+
+def get_category(client, category_id):
+    response = client.get(
+        "/categories/{}".format(category_id),
+        headers=create_headers(),
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response
 
 
 def test_get_category_valid(client):

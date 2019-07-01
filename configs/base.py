@@ -14,6 +14,6 @@ class Config(object):
 
     # Pagination
     # The default number of items per page
-    ITEMS_PER_PAGE = 20
+    DEFAULT_ITEMS_PER_PAGE = 20
     # The default page returned when no page was requested
     DEFAULT_PAGE = 1

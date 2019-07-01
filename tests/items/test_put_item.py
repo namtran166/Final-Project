@@ -2,9 +2,20 @@ import json
 
 import pytest
 
-from tests.actions import put_item
+from tests.actions import get_access_token
 from tests.database_setup import initialize_items
-from tests.utils import create_headers, load_decoded_response, generate_random_string
+from tests.utils import create_headers, generate_random_string, load_decoded_response
+
+
+def put_item(client, authentication=None, category_id=None, item_id=None, data=None):
+    access_token = get_access_token(client, authentication)
+    response = client.put(
+        "/categories/{}/items/{}".format(category_id, item_id),
+        headers=create_headers(access_token=access_token),
+        data=json.dumps(data)
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response
 
 
 @pytest.mark.parametrize(

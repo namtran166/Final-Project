@@ -5,16 +5,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from main.models.user import UserModel
 from main.schemas.user import UserSchema
 from main.utils.exception import BadRequestError, UnauthorizedError
-from main.utils.helper import error_checking, load_data
+from main.utils.helper import load_data
 
 bp_user = Blueprint("user", __name__, url_prefix="/users")
 bp_auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @bp_user.route("", methods=['POST'])
-@error_checking
 @load_data(UserSchema)
-def register_user(data=None):
+def register_user(data):
     if UserModel.find_by_username(data["username"]):
         raise BadRequestError("Username already exists.")
 
@@ -29,9 +28,8 @@ def register_user(data=None):
 
 
 @bp_auth.route("", methods=['POST'])
-@error_checking
 @load_data(UserSchema)
-def authorize_user(data=None):
+def authorize_user(data):
     user = UserModel.find_by_username(data["username"])
 
     if user and check_password_hash(user.hashed_password, data["password"]):

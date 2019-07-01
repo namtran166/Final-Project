@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy import Column, DateTime, Integer
 
 from main.database import db
 from main.utils.exception import DatabaseError
@@ -22,8 +22,10 @@ class BaseModel(db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise DatabaseError("Unexpected Error trying to save to the database. "
-                                "Error message: {}".format(str(e)))
+            raise DatabaseError(
+                "Unexpected Error trying to save to the database. "
+                "Error message: {}".format(str(e))
+            )
 
     def delete_from_db(self):
         try:
@@ -31,8 +33,10 @@ class BaseModel(db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise DatabaseError("Unexpected Error trying to delete to the database. "
-                                "Error message: {}".format(str(e)))
+            raise DatabaseError(
+                "Unexpected Error trying to delete to the database. "
+                "Error message: {}".format(str(e))
+            )
 
     def update_to_db(self, **kwargs):
         for key, value in kwargs.items():

@@ -1,39 +1,29 @@
 import functools
 
-from flask import jsonify, request
+from flask import request
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from flask_jwt_extended.exceptions import NoAuthorizationError
-from jwt.exceptions import InvalidSignatureError, ExpiredSignatureError, DecodeError
+from jwt.exceptions import DecodeError, ExpiredSignatureError, InvalidSignatureError
 
 from main.models.category import CategoryModel
 from main.models.item import ItemModel
-from main.utils.exception import NotFoundError, UnauthorizedError, BadRequestError, ForbiddenError
-from configs import config
-
-
-def error_checking(func):
-    @functools.wraps(func)
-    def check_error(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except (ForbiddenError, BadRequestError, UnauthorizedError, NotFoundError) as e:
-            return e.messages()
-        except Exception as e:
-            print(e)
-            print(e.__class__)
-            return jsonify(description="Unexpected Internal Server Error occurred."), 500
-
-    return check_error
+from main.utils.exception import NotFoundError, UnauthorizedError
 
 
 def validate_item(func):
+    """
+    This function is provided two parameters: category_id and item_id.
+    Check if this item exists in the provided category or not.
+    :return: The item if it exists in the provided category. Raise a NotFoundError otherwise.
+    """
+
     @functools.wraps(func)
     def check_item(*args, **kwargs):
         category = CategoryModel.find_by_id(kwargs["category_id"])
         if category is None:
             raise NotFoundError("Category not found.")
         item = ItemModel.find_by_id(kwargs["item_id"])
-        if item is None:
+        if item is None or item.category_id != kwargs["category_id"]:
             raise NotFoundError("Item not found.")
         return func(item=item, *args, **kwargs)
 
@@ -41,6 +31,12 @@ def validate_item(func):
 
 
 def validate_category(func):
+    """
+    This function is provided one parameter: category_id.
+    Check if this category exists or not.
+    :return: The category if it exists. Raise a NotFoundError otherwise.
+    """
+
     @functools.wraps(func)
     def check_category(*args, **kwargs):
         category = CategoryModel.find_by_id(kwargs["category_id"])
@@ -51,19 +47,12 @@ def validate_category(func):
     return check_category
 
 
-def load_data(schema):
-    def wrapper(func):
-        @functools.wraps(func)
-        def second_wrapper(*args, **kwargs):
-            data = schema().load(request.get_json()).data
-            return func(data=data, *args, **kwargs)
-
-        return second_wrapper
-
-    return wrapper
-
-
 def get_user_id(func):
+    """
+    Get user_id based on the provided jwt identity.
+    :return: user_id if the access_token passed is valid. Raise an UnauthorizedError otherwise.
+    """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         try:
@@ -78,29 +67,19 @@ def get_user_id(func):
     return wrapper
 
 
-def generate_page_information(func):
-    @functools.wraps(func)
-    def wrapper(data=None, category_id=None, *args, **kwargs):
-        items = ItemModel.query.filter_by(category_id=category_id)
-        # Automatically return DEFAULT_PAGE if no specific page was requested
-        if "page" not in data:
-            data["page"] = config.DEFAULT_PAGE
-        # Automatically set items per page to ITEMS_PER_PAGE if no per_page was specified
-        if "per_page" not in data:
-            data["per_page"] = config.ITEMS_PER_PAGE
+def load_data(schema):
+    """
+    Deserialize a request using a specified Schema
+    :param schema: The Schema used to deserialize
+    :return: the deserialized data
+    """
 
-        pagination = items.paginate(page=data["page"], per_page=data["per_page"], error_out=False)
-        # If the requested page is too large, revert back to the maximum page
-        if pagination.pages < data["page"]:
-            pagination = items.paginate(page=pagination.pages, per_page=data["per_page"], error_out=False)
+    def wrapper(func):
+        @functools.wraps(func)
+        def second_wrapper(*args, **kwargs):
+            data = schema().load(request.get_json()).data
+            return func(data=data, *args, **kwargs)
 
-        cur_page = {
-            "page": pagination.page,
-            "per_page": pagination.per_page,
-            "total_items": pagination.total,
-            "total_pages": pagination.pages,
-            "items": pagination.items
-        }
-        return func(cur_page=cur_page, *args, **kwargs)
+        return second_wrapper
 
     return wrapper

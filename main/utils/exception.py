@@ -6,7 +6,7 @@ class BaseError(Exception):
     message = None
 
     def __init__(self, message):
-        super(Exception).__init__()
+        super(BaseError).__init__()
         self.message = message
 
     def messages(self):

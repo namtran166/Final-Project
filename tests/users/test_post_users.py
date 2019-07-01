@@ -68,7 +68,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "password": "123456"
                 },
                 400,
-                "An username must have between 6-64 characters."
+                "A username must have between 6-64 characters."
         ),
         # Test case: Password is too short
         (
@@ -86,7 +86,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "password": "123456"
                 },
                 400,
-                "An username must have between 6-64 characters."
+                "A username must have between 6-64 characters."
         ),
         # Test case: Password is too long
         (
@@ -105,7 +105,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "first_name": generate_random_string(65)
                 },
                 400,
-                "First name must be at most 64 characters."
+                "First name must be at most 32 characters."
         ),
         # Test case: Last name is too long
         (
@@ -115,7 +115,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "last_name": generate_random_string(65)
                 },
                 400,
-                "Last name must be at most 64 characters."
+                "Last name must be at most 32 characters."
         )
     ]
 )

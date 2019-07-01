@@ -1,8 +1,17 @@
 import pytest
 
-from tests.actions import delete_item
+from tests.actions import get_access_token
 from tests.database_setup import initialize_items
 from tests.utils import create_headers, load_decoded_response
+
+
+def delete_item(client, authentication=None, category_id=None, item_id=None):
+    access_token = get_access_token(client, authentication)
+    response = client.delete(
+        "/categories/{}/items/{}".format(category_id, item_id),
+        headers=create_headers(access_token=access_token)
+    )
+    return response
 
 
 def test_delete_item_valid(client):

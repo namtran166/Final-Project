@@ -2,17 +2,17 @@ import pytest
 
 from main import app
 from main.database import db
-from tests.database_setup import initialize_categories, initialize_users, drop_tables
+from tests.database_setup import drop_tables, initialize_categories, initialize_users
 
 
 @pytest.fixture
 def app_testing():
+    drop_tables()
+    db.create_all(app=app)
     with app.app_context():
         initialize_categories()
         initialize_users()
     yield app
-    drop_tables()
-    db.create_all(app=app)
 
 
 @pytest.fixture

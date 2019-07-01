@@ -1,7 +1,16 @@
 import pytest
 
-from tests.actions import get_item
 from tests.database_setup import initialize_items
+from tests.utils import create_headers, load_decoded_response
+
+
+def get_item(client, category_id=None, item_id=None):
+    response = client.get(
+        "/categories/{}/items/{}".format(category_id, item_id),
+        headers=create_headers(),
+    )
+    json_response = load_decoded_response(response)
+    return response, json_response
 
 
 def test_get_item_valid(client):

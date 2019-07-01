@@ -4,7 +4,7 @@ from main.schemas.base import BaseSchema
 from main.schemas.item import ItemSchema
 
 
-class PaginationSchema(BaseSchema):
+class ItemPaginationSchema(BaseSchema):
     page = fields.Integer(
         validate=validate.Range(min=1, error="Requested page must be positive.")
     )
@@ -17,4 +17,6 @@ class PaginationSchema(BaseSchema):
 
     total_pages = fields.Integer(dump_only=True)
 
-    items = fields.Nested(ItemSchema, many=True, only=("id", "name", "description", "user"))
+    items = fields.Nested(
+        ItemSchema, many=True, dump_only=True, only=("id", "name", "description", "user")
+    )
