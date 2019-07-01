@@ -2,7 +2,7 @@
 
 Final Project Backend for Got It Onboarding Program.
 
-## Set up
+## Setting up
 
 #### 1. Install and activate virtual environment
 Make sure that you already are in root directory of the project before running the following code, which is ~/FinalProject in this case. I am using Python 3.7.3, but other versions of Python are also supported. 
@@ -26,14 +26,14 @@ For example: SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:123456@local
 ```
 
 #### 4. Change the configurations (optional)
-Config your SECRET_KEY, JWT_SECRET_KEY, and other configurations based on your favorite cannot be easier. Simply go to ~/FinalProject/configs/__init__.py and enjoy.
+Config your SECRET_KEY, JWT_SECRET_KEY, and other configurations based on your favorite cannot be easier. Simply go to ~/FinalProject/configs/base.py and enjoy.
 
-## Run the server
+## Starting the server
 Run the following command:
 ```
 $ python app.py
 ```
-And the magic happens on: http://localhost:5000 
+And the magic will happen on: http://localhost:5000 
 
 ## Testing
 Simply run the following command:
