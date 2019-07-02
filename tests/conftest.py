@@ -6,7 +6,7 @@ from tests.database_setup import drop_tables, initialize_categories, initialize_
 
 
 @pytest.fixture
-def app_testing():
+def app_setup():
     drop_tables()
     db.create_all(app=app)
     with app.app_context():
@@ -16,5 +16,5 @@ def app_testing():
 
 
 @pytest.fixture
-def client(app_testing):
-    return app_testing.test_client()
+def client(app_setup):
+    return app_setup.test_client()
