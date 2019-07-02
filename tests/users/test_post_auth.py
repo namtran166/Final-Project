@@ -59,7 +59,7 @@ def test_post_auth_valid(client, authentication, status_code):
                     "password": "123456"
                 },
                 400,
-                "Missing data for required field: username."
+                "Missing data for required field(s): username."
         ),
         # Test case: Missing password
         (
@@ -67,7 +67,7 @@ def test_post_auth_valid(client, authentication, status_code):
                     "username": "brian123"
                 },
                 400,
-                "Missing data for required field: password."
+                "Missing data for required field(s): password."
         )
     ]
 )

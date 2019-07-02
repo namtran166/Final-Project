@@ -23,7 +23,7 @@ class BaseSchema(Schema):
         # List of error messages by missing required fields
         missing_errors = [key for key in error.messages if error.messages[key] == missing_message]
         if missing_errors:
-            return_message += "Missing data for required field: "
+            return_message += "Missing data for required field(s): "
             for missing_field in missing_errors:
                 return_message += missing_field + " "
 

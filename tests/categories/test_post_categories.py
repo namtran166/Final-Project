@@ -44,7 +44,7 @@ def test_post_categories_valid(client, data, status_code):
                     "description": "19th-century Russian novelist."
                 },
                 400,
-                "Missing data for required field: name."
+                "Missing data for required field(s): name."
         ),
         # Test case: Name is too short
         (

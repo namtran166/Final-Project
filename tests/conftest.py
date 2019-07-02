@@ -12,7 +12,7 @@ def app_testing():
     with app.app_context():
         initialize_categories()
         initialize_users()
-    yield app
+    return app
 
 
 @pytest.fixture

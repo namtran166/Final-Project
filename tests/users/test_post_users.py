@@ -51,7 +51,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "password": "123356"
                 },
                 400,
-                "Missing data for required field: username."
+                "Missing data for required field(s): username."
         ),
         # Test case: Missing password
         (
@@ -59,7 +59,7 @@ def test_post_users_valid(client, authentication, status_code):
                     "username": "brian123"
                 },
                 400,
-                "Missing data for required field: password."
+                "Missing data for required field(s): password."
         ),
         # Test case: Username is too short
         (

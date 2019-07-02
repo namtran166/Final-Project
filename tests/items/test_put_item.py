@@ -55,7 +55,7 @@ def test_put_item_valid(client, authentication, category_id, item_id, data):
                     "description": "A book about the risks of government overreach and totalitarianism."
                 },
                 400,
-                "Missing data for required field: name."
+                "Missing data for required field(s): name."
         ),
         # Test case: Name is too short
         (
