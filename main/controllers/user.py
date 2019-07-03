@@ -33,7 +33,7 @@ def authorize_user(data):
     user = UserModel.find_by_username(data['username'])
 
     if user and check_password_hash(user.hashed_password, data['password']):
-        user_in_jwt_token = UserSchema(only=('id', 'username')).dump(user).data
+        user_in_jwt_token = UserSchema(only=('id', )).dump(user).data
         access_token = create_access_token(identity={'user': user_in_jwt_token})
         authentication = {
             'access_token': access_token,
