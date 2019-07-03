@@ -38,4 +38,4 @@ class BaseModel(db.Model):
     def update_to_db(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        self.save_to_db()
+        db.session.commit()
