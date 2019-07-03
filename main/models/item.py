@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 
@@ -12,8 +12,8 @@ class ItemModel(BaseModel):
     name = Column(String(256), nullable=False)
     description = Column(String(1024))
     updated = Column(DateTime,
-                     default=datetime.datetime.now,
-                     onupdate=datetime.datetime.now)
+                     default=datetime.now,
+                     onupdate=datetime.now)
 
     # Foreign keys
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)

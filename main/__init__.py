@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-
+from werkzeug.exceptions import HTTPException
+import logging
 import main.models
 from configs import config
 from main.controllers.category import bp_category
@@ -32,6 +33,12 @@ def handle_customized_error(e):
     return e.messages()
 
 
+@app.errorhandler(HTTPException)
+def handle_http_error(e):
+    return jsonify(description=e.description), e.code
+
+
 @app.errorhandler(Exception)
-def handle_general_error(*_):
-    return jsonify(description="Unexpected Internal Server Error occurred."), 500
+def handle_general_error(e):
+    logging.error(str(e))
+    return jsonify(description='Unexpected Internal Server Error occurred.'), 500

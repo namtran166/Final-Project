@@ -6,11 +6,11 @@ from main.schemas.item import ItemSchema
 
 class ItemPaginationSchema(BaseSchema):
     page = fields.Integer(
-        validate=validate.Range(min=1, error="Requested page must be positive.")
+        validate=validate.Range(min=1, error='Requested page must be positive.')
     )
 
     per_page = fields.Integer(
-        validate=validate.Range(min=1, max=100, error="One page can only display between 1-100 items.")
+        validate=validate.Range(min=1, max=100, error='One page can only display between 1-100 items.')
     )
 
     total_items = fields.Integer(dump_only=True)
@@ -18,5 +18,5 @@ class ItemPaginationSchema(BaseSchema):
     total_pages = fields.Integer(dump_only=True)
 
     items = fields.Nested(
-        ItemSchema, many=True, dump_only=True, only=("id", "name", "description", "user")
+        ItemSchema, many=True, dump_only=True, only=('id', 'name', 'description', 'user')
     )

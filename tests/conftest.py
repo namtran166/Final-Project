@@ -2,7 +2,7 @@ import pytest
 
 from main import app
 from main.database import db
-from tests.database_setup import drop_tables, initialize_categories, initialize_users
+from tests.database_setup import drop_tables, initialize_categories, initialize_users, initialize_items
 
 
 @pytest.fixture
@@ -12,6 +12,7 @@ def app_setup():
     with app.app_context():
         initialize_categories()
         initialize_users()
+        initialize_items()
     return app
 
 

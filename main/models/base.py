@@ -1,4 +1,5 @@
-import datetime
+import logging
+from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Integer
 
@@ -10,7 +11,7 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    created = Column(DateTime, default=datetime.datetime.now)
+    created = Column(DateTime, default=datetime.now)
 
     @classmethod
     def find_by_id(cls, _id):
@@ -22,10 +23,8 @@ class BaseModel(db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise DatabaseError(
-                "Unexpected Error trying to save to the database. "
-                "Error message: {}".format(str(e))
-            )
+            logging.exception(e)
+            raise DatabaseError('Unexpected Error trying to save to the database.')
 
     def delete_from_db(self):
         try:
@@ -33,10 +32,8 @@ class BaseModel(db.Model):
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise DatabaseError(
-                "Unexpected Error trying to delete to the database. "
-                "Error message: {}".format(str(e))
-            )
+            logging.exception(e)
+            raise DatabaseError('Unexpected Error trying to delete from the database.')
 
     def update_to_db(self, **kwargs):
         for key, value in kwargs.items():

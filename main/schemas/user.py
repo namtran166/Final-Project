@@ -8,19 +8,29 @@ class UserSchema(BaseSchema, StripSchema):
 
     username = fields.String(
         required=True,
-        validate=validate.Length(min=6, max=64, error="A username must have between 6-64 characters.")
+        validate=validate.Length(min=6, max=64, error='A username must have between 6-64 characters.')
     )
 
     password = fields.String(
         required=True,
         load_only=True,
-        validate=validate.Length(min=6, max=64, error="A password must have between 6-64 characters.")
+        validate=validate.Length(min=6, max=64, error='A password must have between 6-64 characters.')
     )
 
     first_name = fields.String(
-        validate=validate.Length(max=32, error="First name must be at most 32 characters.")
+        validate=validate.Length(max=32, error='First name must be at most 32 characters.')
     )
 
     last_name = fields.String(
-        validate=validate.Length(max=32, error="Last name must be at most 32 characters.")
+        validate=validate.Length(max=32, error='Last name must be at most 32 characters.')
     )
+
+
+class UserAuthenticationSchema(BaseSchema, StripSchema):
+    username = fields.String(required=True, load_only=True)
+
+    password = fields.String(required=True, load_only=True)
+
+    user = fields.Nested(UserSchema, dump_only=True)
+
+    access_token = fields.String(required=True, dump_only=True)

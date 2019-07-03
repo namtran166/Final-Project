@@ -10,19 +10,19 @@ class ItemSchema(BaseSchema, StripSchema):
     name = fields.String(
         required=True,
         validate=validate.Length(
-            min=1, max=256, error="An item name must have between 1-256 characters."
+            min=1, max=256, error='An item name must have between 1-256 characters.'
         )
     )
 
     description = fields.String(
         validate=validate.Length(
-            max=1024, error="An item description must have at most 1024 characters."
+            max=1024, error='An item description must have at most 1024 characters.'
         )
     )
 
     category_id = fields.Integer(required=True, dump_only=True)
 
-    user = fields.Nested(UserSchema, dump_only=True, only=("id", "username"))
+    user = fields.Nested(UserSchema, dump_only=True, only=('id', 'username'))
 
     created = fields.DateTime(dump_only=True)
 

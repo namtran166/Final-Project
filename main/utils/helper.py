@@ -19,12 +19,12 @@ def validate_item(func):
 
     @functools.wraps(func)
     def check_item(*args, **kwargs):
-        category = CategoryModel.find_by_id(kwargs["category_id"])
+        category = CategoryModel.find_by_id(kwargs['category_id'])
         if category is None:
-            raise NotFoundError("Category not found.")
-        item = ItemModel.find_by_id(kwargs["item_id"])
-        if item is None or item.category_id != kwargs["category_id"]:
-            raise NotFoundError("Item not found.")
+            raise NotFoundError('Category not found.')
+        item = ItemModel.find_by_id(kwargs['item_id'])
+        if item is None or item.category_id != kwargs['category_id']:
+            raise NotFoundError('Item not found.')
         return func(item=item, *args, **kwargs)
 
     return check_item
@@ -39,9 +39,9 @@ def validate_category(func):
 
     @functools.wraps(func)
     def check_category(*args, **kwargs):
-        category = CategoryModel.find_by_id(kwargs["category_id"])
+        category = CategoryModel.find_by_id(kwargs['category_id'])
         if category is None:
-            raise NotFoundError("Category not found.")
+            raise NotFoundError('Category not found.')
         return func(category=category, *args, **kwargs)
 
     return check_category
@@ -57,12 +57,12 @@ def get_user_id(func):
     def wrapper(*args, **kwargs):
         try:
             verify_jwt_in_request()
-            user_id = get_jwt_identity()["user"]["id"]
+            user_id = get_jwt_identity()['user']['id']
             return func(user_id=user_id, *args, **kwargs)
         except ExpiredSignatureError:
-            raise UnauthorizedError("Access token has expired.")
+            raise UnauthorizedError('Access token has expired.')
         except (InvalidSignatureError, DecodeError, NoAuthorizationError):
-            raise UnauthorizedError("Access token is invalid.")
+            raise UnauthorizedError('Access token is invalid.')
 
     return wrapper
 

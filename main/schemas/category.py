@@ -16,7 +16,7 @@ class CategorySchema(BaseSchema, StripSchema):
 
     description = fields.String(
         validate=validate.Length(
-            max=1024, error="A category description must have at most 1024 characters."
+            max=1024, error='A category description must have at most 1024 characters.'
         )
     )
 
